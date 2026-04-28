@@ -50,11 +50,8 @@ export const ramenChapter: Chapter = {
     },
     {
       title: "Proportional Editing",
-      tagline: "Ek vertex move karo, magnet ki tarah aas paas wale bhi follow karein.",
+      tagline: "Ek vertex move karo, magnet ki tarah aas paas wale bhi follow karein. Shortcut: O",
       timestamp: 2515,
-      shortcuts: [
-        { keys: "O", meaning: "Proportional Editing toggle" },
-      ],
       whatItIs:
         "Edit mode mein `O` press karke proportional editing on karo. Header mein circle icon highlight ho jata hai. Ab kisi vertex ko `G` se move karoge, ek bara circle dikhega aur us circle ke andar wale vertices bhi follow karenge with falloff. Mouse wheel se circle ka radius adjust hota hai.",
       whyHere:

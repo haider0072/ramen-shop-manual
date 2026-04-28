@@ -10,21 +10,41 @@ export function DeepSidebar({ concepts }: { concepts: DeepConcept[] }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const elems = concepts
-      .map((c) => document.getElementById(`core-${c.id}`))
-      .filter((e): e is HTMLElement => e !== null);
-    if (elems.length === 0) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActiveId(visible[0].target.id.replace(/^core-/, ""));
-      },
-      { rootMargin: "-88px 0px -60% 0px", threshold: 0 },
-    );
-    elems.forEach((e) => obs.observe(e));
-    return () => obs.disconnect();
+    const ids = concepts.map((c) => c.id);
+    // Offset matches sticky header (64px) + a bit of breathing room.
+    const OFFSET = 120;
+
+    const computeActive = () => {
+      let current = ids[0] ?? "";
+      for (const id of ids) {
+        const el = document.getElementById(`core-${id}`);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top;
+        if (top - OFFSET <= 0) {
+          current = id;
+        } else {
+          break;
+        }
+      }
+      setActiveId(current);
+    };
+
+    computeActive();
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        computeActive();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [concepts]);
 
   return (

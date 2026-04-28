@@ -24,7 +24,7 @@ export function DeepCard({ concept }: { concept: DeepConcept }) {
   const { lang } = useLang();
 
   return (
-    <article id={`core-${concept.id}`} className="py-14 border-t border-rule first:border-t-0 first:pt-0">
+    <article id={`core-${concept.id}`} className="py-14 border-t border-rule first:border-t-0 first:pt-0 scroll-mt-24">
       <header className="mb-6">
         <h3 className="font-serif text-[2rem] sm:text-[2.25rem] leading-tight tracking-[-0.015em] text-ink">
           <BiText value={concept.title} />

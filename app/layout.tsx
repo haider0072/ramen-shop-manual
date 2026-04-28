@@ -3,6 +3,7 @@ import { Inter, Source_Serif_4, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeScript } from "@/components/ThemeScript";
 import { LangProvider } from "@/components/LangProvider";
+import { ChatLauncher } from "@/components/ChatLauncher";
 
 const sans = Inter({
   variable: "--font-sans-stack",
@@ -41,7 +42,10 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body>
-        <LangProvider>{children}</LangProvider>
+        <LangProvider>
+          {children}
+          <ChatLauncher />
+        </LangProvider>
       </body>
     </html>
   );

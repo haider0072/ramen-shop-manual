@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "./LangProvider";
 import { getCached, setCached } from "@/lib/chat-cache";
+import { formatTimestamp, usePlayer } from "./PlayerProvider";
 
 interface Msg {
   role: "user" | "assistant";
@@ -54,12 +55,30 @@ interface Props {
 
 export function ChatPanel({ open, onClose }: Props) {
   const { lang } = useLang();
+  const { getCurrentTime } = usePlayer();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [attachVideoTime, setAttachVideoTime] = useState(true);
+  const [livePreviewTime, setLivePreviewTime] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Refresh the preview pill while panel is open and toggle is on.
+  useEffect(() => {
+    if (!open || !attachVideoTime) {
+      setLivePreviewTime(null);
+      return;
+    }
+    const tick = () => {
+      const t = getCurrentTime();
+      setLivePreviewTime(typeof t === "number" && t > 0 ? t : null);
+    };
+    tick();
+    const id = setInterval(tick, 1500);
+    return () => clearInterval(id);
+  }, [open, attachVideoTime, getCurrentTime]);
 
   useEffect(() => {
     setMessages(loadHistory());
@@ -85,6 +104,7 @@ export function ChatPanel({ open, onClose }: Props) {
     if (!q || streaming) return;
 
     const conceptId = detectCurrentConcept();
+    const videoTime = attachVideoTime ? getCurrentTime() : null;
     setError(null);
     setInput("");
 
@@ -92,8 +112,10 @@ export function ChatPanel({ open, onClose }: Props) {
     const newHistory = [...messages, userMsg];
     setMessages(newHistory);
 
-    // Cache check
-    const cached = await getCached(q, lang, conceptId);
+    // Cache check (key includes video bucket so different positions cache separately)
+    const videoBucket = videoTime != null ? Math.floor(videoTime / 30) : "none";
+    const cacheKey = `${q}|vt:${videoBucket}`;
+    const cached = await getCached(cacheKey, lang, conceptId);
     if (cached) {
       const finalHistory = [...newHistory, { role: "assistant" as const, content: cached + "\n\n_(cached)_" }];
       setMessages(finalHistory);
@@ -115,6 +137,7 @@ export function ChatPanel({ open, onClose }: Props) {
           messages: newHistory,
           lang,
           currentConceptId: conceptId,
+          currentVideoTime: videoTime,
         }),
         signal: ac.signal,
       });
@@ -158,7 +181,7 @@ export function ChatPanel({ open, onClose }: Props) {
 
       const finalHistory = [...newHistory, { role: "assistant" as const, content: acc }];
       saveHistory(finalHistory);
-      if (acc) await setCached(q, lang, conceptId, acc);
+      if (acc) await setCached(cacheKey, lang, conceptId, acc);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Unknown error";
       setError(msg);
@@ -262,6 +285,36 @@ export function ChatPanel({ open, onClose }: Props) {
             send();
           }}
         >
+          <div className="flex items-center gap-2 mb-2">
+            <button
+              type="button"
+              onClick={() => setAttachVideoTime((v) => !v)}
+              className={`group inline-flex items-center gap-1.5 px-2 h-6 rounded-sm border text-[10.5px] uppercase tracking-[0.1em] font-sans font-medium transition-colors ${
+                attachVideoTime
+                  ? "border-rule text-ink bg-kbd-bg/60"
+                  : "border-rule text-ink-faint hover:text-ink-muted"
+              }`}
+              title={lang === "en" ? "Send your current video timestamp with each question" : "Har sawal ke saath current video time bhejo"}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${attachVideoTime ? "bg-accent" : "bg-ink-faint"}`}
+              />
+              {attachVideoTime
+                ? livePreviewTime != null
+                  ? `at ${formatTimestamp(livePreviewTime)}`
+                  : lang === "en"
+                  ? "video off"
+                  : "video off"
+                : lang === "en"
+                ? "no video"
+                : "no video"}
+            </button>
+            {attachVideoTime && livePreviewTime == null && (
+              <span className="text-[10.5px] text-ink-faint font-sans">
+                {lang === "en" ? "play the video to attach time" : "video play karo time attach karne ke liye"}
+              </span>
+            )}
+          </div>
           <div className="flex items-end gap-2">
             <textarea
               value={input}

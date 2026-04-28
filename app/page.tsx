@@ -5,14 +5,13 @@ import { TopBar } from "@/components/TopBar";
 import { Sidebar } from "@/components/Sidebar";
 import { ChapterSection } from "@/components/ChapterSection";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
-import { PlayerProvider } from "@/components/PlayerProvider";
 import { MobileChapterBar } from "@/components/MobileChapterBar";
 import { useLang } from "@/components/LangProvider";
 
 export default function Home() {
   const { lang } = useLang();
   return (
-    <PlayerProvider>
+    <>
       <TopBar />
       <MobileChapterBar chapters={manual.chapters} />
       <div className="max-w-[1480px] mx-auto px-5 sm:px-8">
@@ -131,6 +130,6 @@ export default function Home() {
           </aside>
         </div>
       </div>
-    </PlayerProvider>
+    </>
   );
 }

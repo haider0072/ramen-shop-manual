@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeScript } from "@/components/ThemeScript";
 import { LangProvider } from "@/components/LangProvider";
 import { ChatLauncher } from "@/components/ChatLauncher";
+import { PlayerProvider } from "@/components/PlayerProvider";
 
 const sans = Inter({
   variable: "--font-sans-stack",
@@ -43,8 +44,10 @@ export default function RootLayout({
       </head>
       <body>
         <LangProvider>
-          {children}
-          <ChatLauncher />
+          <PlayerProvider>
+            {children}
+            <ChatLauncher />
+          </PlayerProvider>
         </LangProvider>
       </body>
     </html>

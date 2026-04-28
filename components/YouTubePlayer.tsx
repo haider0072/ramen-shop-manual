@@ -70,6 +70,7 @@ export function YouTubePlayer({ videoId, startsAt = 0 }: Props) {
                 playerRef.current?.seekTo(s, true);
                 playerRef.current?.playVideo();
               },
+              getCurrentTime: () => playerRef.current?.getCurrentTime() ?? 0,
             });
 
             // Save current time every 5s while the player exists.

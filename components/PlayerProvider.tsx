@@ -2,29 +2,40 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
+interface PlayerApi {
+  seekTo: (s: number) => void;
+  getCurrentTime?: () => number;
+}
+
 interface PlayerContextValue {
   seek: (seconds: number) => void;
-  registerPlayer: (api: { seekTo: (s: number) => void }) => void;
+  getCurrentTime: () => number | null;
+  registerPlayer: (api: PlayerApi) => void;
 }
 
 const PlayerContext = createContext<PlayerContextValue | null>(null);
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const playerRef = useRef<{ seekTo: (s: number) => void } | null>(null);
+  const playerRef = useRef<PlayerApi | null>(null);
 
-  const registerPlayer = useCallback(
-    (api: { seekTo: (s: number) => void }) => {
-      playerRef.current = api;
-    },
-    [],
-  );
+  const registerPlayer = useCallback((api: PlayerApi) => {
+    playerRef.current = api;
+  }, []);
 
   const seek = useCallback((seconds: number) => {
     playerRef.current?.seekTo(seconds);
   }, []);
 
+  const getCurrentTime = useCallback(() => {
+    try {
+      return playerRef.current?.getCurrentTime?.() ?? null;
+    } catch {
+      return null;
+    }
+  }, []);
+
   return (
-    <PlayerContext.Provider value={{ seek, registerPlayer }}>
+    <PlayerContext.Provider value={{ seek, getCurrentTime, registerPlayer }}>
       {children}
     </PlayerContext.Provider>
   );
@@ -32,7 +43,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
 export function usePlayer() {
   const ctx = useContext(PlayerContext);
-  if (!ctx) throw new Error("usePlayer must be used within PlayerProvider");
+  if (!ctx) {
+    return {
+      seek: () => {},
+      getCurrentTime: () => null as number | null,
+      registerPlayer: () => {},
+    };
+  }
   return ctx;
 }
 

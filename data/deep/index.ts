@@ -9,6 +9,10 @@ import { outlinerConcept } from "./outliner";
 import { localViewConcept } from "./local-view";
 import { xRayConcept } from "./x-ray";
 import { shadingModesConcept } from "./shading-modes";
+import { collectionsConcept } from "./collections";
+import { appendLinkConcept } from "./append-link";
+import { assetBrowserConcept } from "./asset-browser";
+import { autoSaveConcept } from "./auto-save";
 
 // Geometry
 import { vertexEdgeFaceConcept } from "./vertex-edge-face";
@@ -20,6 +24,9 @@ import { mergeConcept } from "./merge";
 import { extrudeConcept } from "./extrude";
 import { insetConcept } from "./inset";
 import { loopCutConcept } from "./loop-cut";
+import { knifeBisectConcept } from "./knife-bisect";
+import { vertexGroupsConcept } from "./vertex-groups";
+import { edgeOperationsConcept } from "./edge-operations";
 
 // Transforms
 import { grsConcept } from "./g-r-s";
@@ -35,11 +42,19 @@ import { bevelModifierConcept } from "./bevel-modifier";
 import { subdivisionSurfaceConcept } from "./subdivision-surface";
 import { solidifyConcept } from "./solidify";
 import { curvesAndBevelDepthConcept } from "./curves-and-bevel-depth";
+import { mirrorModifierConcept } from "./mirror-modifier";
+import { arrayModifierConcept } from "./array-modifier";
+import { booleanModifierConcept } from "./boolean-modifier";
 
 // Shading
 import { principledBSDFConcept } from "./principled-bsdf";
 import { emissionShaderConcept } from "./emission-shader";
 import { materialSlotsConcept } from "./material-slots";
+import { shaderNodesConcept } from "./shader-nodes";
+import { textureTypesConcept } from "./texture-types";
+import { uvUnwrapConcept } from "./uv-unwrap";
+import { worldHdriConcept } from "./world-hdri";
+import { colorManagementConcept } from "./color-management";
 
 // Lighting
 import { lightTypesConcept } from "./light-types";
@@ -48,10 +63,15 @@ import { volumetricFogConcept } from "./volumetric-fog";
 // Animation
 import { keyframesConcept } from "./keyframes";
 import { parentEmptyConcept } from "./parent-empty";
+import { graphEditorConcept } from "./graph-editor";
+import { driversConcept } from "./drivers";
 
 // Render
 import { eeveeVsCyclesConcept } from "./eevee-vs-cycles";
 import { samplesDenoisingConcept } from "./samples-denoising";
+import { cameraSettingsConcept } from "./camera-settings";
+import { compositorConcept } from "./compositor";
+import { outputSettingsConcept } from "./output-settings";
 
 export const deepConcepts: DeepConcept[] = [
   // Interface
@@ -60,9 +80,13 @@ export const deepConcepts: DeepConcept[] = [
   cursor3DConcept,
   nPanelConcept,
   outlinerConcept,
+  collectionsConcept,
   localViewConcept,
   xRayConcept,
   shadingModesConcept,
+  appendLinkConcept,
+  assetBrowserConcept,
+  autoSaveConcept,
 
   // Geometry
   vertexEdgeFaceConcept,
@@ -74,6 +98,9 @@ export const deepConcepts: DeepConcept[] = [
   extrudeConcept,
   insetConcept,
   loopCutConcept,
+  knifeBisectConcept,
+  edgeOperationsConcept,
+  vertexGroupsConcept,
 
   // Transforms
   grsConcept,
@@ -88,12 +115,20 @@ export const deepConcepts: DeepConcept[] = [
   bevelModifierConcept,
   subdivisionSurfaceConcept,
   solidifyConcept,
+  mirrorModifierConcept,
+  arrayModifierConcept,
+  booleanModifierConcept,
   curvesAndBevelDepthConcept,
 
   // Shading
+  shaderNodesConcept,
   principledBSDFConcept,
   emissionShaderConcept,
   materialSlotsConcept,
+  textureTypesConcept,
+  uvUnwrapConcept,
+  worldHdriConcept,
+  colorManagementConcept,
 
   // Lighting
   lightTypesConcept,
@@ -101,9 +136,14 @@ export const deepConcepts: DeepConcept[] = [
 
   // Animation
   keyframesConcept,
+  graphEditorConcept,
+  driversConcept,
   parentEmptyConcept,
 
   // Render
   eeveeVsCyclesConcept,
   samplesDenoisingConcept,
+  cameraSettingsConcept,
+  compositorConcept,
+  outputSettingsConcept,
 ];

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
+import { LangToggle } from "./LangToggle";
 import { usePathname } from "next/navigation";
 
 interface Props {
@@ -35,6 +36,7 @@ export function TopBar({ title = "Ramen Shop Manual" }: Props) {
           >
             Core
           </Link>
+          <LangToggle />
           <ThemeToggle />
         </nav>
       </div>
